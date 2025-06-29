@@ -11,13 +11,11 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // ✅ Get stored user (manual or Google)
     const storedUser = localStorage.getItem('taskUser');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
 
-    // ✅ Listen to Google auth changes
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
@@ -37,7 +35,6 @@ function App() {
           path="/task"
           element={user ? <TaskPage user={user} /> : <Navigate to="/login" />}
         />
-        {/* Default route redirects to login or task based on user */}
         <Route
           path="/"
           element={<Navigate to={user ? "/task" : "/login"} />}
