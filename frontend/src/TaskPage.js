@@ -35,12 +35,17 @@ function TaskPage({ user }) {
       });
   };
 
-  const toggleTask = (id, done) => {
-    axios.put(`https://todotask-im6j.onrender.com/tasks/${id}`, { done: !done })
-      .then(res => {
-        setTasks(tasks.map(t => (t._id === id ? res.data : t)));
-      });
-  };
+  const toggleTask = (id, currentDone) => {
+  axios.put(`https://your-backend-url.onrender.com/tasks/${id}`, {
+    done: !currentDone,
+    userId: user?.uid || user?.displayName
+  })
+  .then(res => {
+    setTasks(tasks.map(t => (t._id === id ? res.data : t)));
+  })
+  .catch(err => console.error("Toggle error:", err));
+};
+
 
   const deleteTask = (id) => {
     axios.delete(`https://todotask-im6j.onrender.com/tasks/${id}`)
