@@ -9,7 +9,6 @@ app.use(express.json());
 mongoose.connect('mongodb+srv://myUser:Mypassword123@cluster0.v36yeof.mongodb.net/todo?retryWrites=true&w=majority')
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("❌ MongoDB connection error:", err));
-
 app.get('/tasks', async (req, res) => {
   const userId = req.query.userId;
   if (!userId) return res.status(400).send('User ID required');
@@ -80,31 +79,36 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.put("/tasks/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, done, userId } = req.body;
 
-app.put('/tasks/:id', async (req, res) => {
   try {
-    const { done } = req.body;
-    const task = await Task.findByIdAndUpdate(
-      req.params.id,
-      { done },
+    const updated = await Task.findOneAndUpdate(
+      { _id: id, userId },
+      { title, done },
       { new: true }
     );
-    res.json(task);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update task' });
+
+    if (!updated) return res.status(404).json({ error: "Task not found" });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: "Update failed" });
   }
 });
 
-app.delete('/tasks/:id', async (req, res) => {
+app.delete("/tasks/:id", async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
   try {
-    await Task.findByIdAndDelete(req.params.id);
+    const deleted = await Task.findOneAndDelete({ _id: id, userId });
+
+    if (!deleted) return res.status(404).json({ error: "Task not found" });
     res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete task' });
+  } catch (err) {
+    res.status(500).json({ error: "Delete failed" });
   }
-});
-app.get('/', (req, res) => {
-  res.send(' Backend working!');
 });
 
 const PORT =5050;
