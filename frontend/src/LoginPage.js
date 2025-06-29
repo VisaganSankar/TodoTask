@@ -2,41 +2,55 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from './firebase';
-import './App.css'; 
+import './App.css';
 import axios from 'axios';
 
 function LoginPage({ setUser }) {
   const navigate = useNavigate();
-const [identifier, setIdentifier] = useState('');
-const [password, setPassword] = useState('');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
 
+  // Manual login handler
+  const handleManualLogin = async () => {
+    if (!identifier || !password) {
+      alert("Please fill in both fields");
+      return;
+    }
 
-const handleManualLogin = () => {
-  axios.post('https://todotask-im6j.onrender.com/login', { identifier, password })
-    .then(res => {
+    try {
+      const res = await axios.post('https://todotask-im6j.onrender.com/login', {
+        identifier,
+        password
+      });
+
       const manualUser = {
-        displayName: res.data.userId,
+        uid: res.data.userId,
         email: res.data.email,
         type: 'manual'
       };
-      setUser(manualUser);
+
       localStorage.setItem('taskUser', JSON.stringify(manualUser));
+      setUser(manualUser);
       navigate('/task');
-    })
-    .catch(err => {
-      alert('❌ Invalid ID or Password');
+    } catch (err) {
       console.error("Login error:", err);
-    });
-};
+      alert('❌ Invalid username/email or password');
+    }
+  };
 
-
-
+  // Google login handler
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      setUser(user);
+      const user = {
+        uid: result.user.uid,
+        email: result.user.email,
+        displayName: result.user.displayName,
+        type: 'google'
+      };
+
       localStorage.setItem('taskUser', JSON.stringify(user));
+      setUser(user);
       navigate('/task');
     } catch (error) {
       console.error('Google login failed:', error);
@@ -50,7 +64,7 @@ const handleManualLogin = () => {
 
       <input
         type="text"
-        placeholder="username or Email"
+        placeholder="Username or Email"
         value={identifier}
         onChange={(e) => setIdentifier(e.target.value)}
         className="edit-input"
@@ -68,15 +82,15 @@ const handleManualLogin = () => {
       />
       <br />
 
-      <button className="save-btn" onClick={handleManualLogin}>🔐 Login with ID</button>
+      <button className="save-btn" onClick={handleManualLogin}> Login with ID</button>
 
       <hr style={{ margin: '30px auto', width: '60%', borderColor: '#444' }} />
 
-      <button className="save-btn" onClick={handleGoogleLogin}>🔑 Sign in with Google</button>
-      <p style={{ marginTop: '20px' }}>
-  Don’t have an account? <a href="/register">Register</a>
-</p>
+      <button className="save-btn" onClick={handleGoogleLogin}> Sign in with Google</button>
 
+      <p style={{ marginTop: '20px' }}>
+        Don’t have an account? <a href="/register">Register</a>
+      </p>
     </div>
   );
 }
