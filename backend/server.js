@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const Task = require('./models/Task'); // adjust this path
+const Task = require('./models/Task'); 
 const User = require('./models/User');
 const app = express();
 app.use(cors());
@@ -59,7 +59,7 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  const { identifier, password } = req.body; // ✅ identifier instead of userId
+  const { identifier, password } = req.body; 
 
   try {
     const user = await User.findOne({
@@ -70,7 +70,6 @@ app.post('/login', async (req, res) => {
       return res.status(401).send('Invalid credentials');
     }
 
-    // ✅ Return user info
     res.json({
       userId: user.userId,
       email: user.email
@@ -82,7 +81,6 @@ app.post('/login', async (req, res) => {
 });
 
 
-// ✏️ Update task status
 app.put('/tasks/:id', async (req, res) => {
   try {
     const { done } = req.body;
@@ -97,7 +95,6 @@ app.put('/tasks/:id', async (req, res) => {
   }
 });
 
-// ❌ Delete a task
 app.delete('/tasks/:id', async (req, res) => {
   try {
     await Task.findByIdAndDelete(req.params.id);
