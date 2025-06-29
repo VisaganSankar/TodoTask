@@ -35,16 +35,25 @@ function TaskPage({ user }) {
       });
   };
 
-  const toggleTask = (id, currentDone) => {
-  axios.put(`https://your-backend-url.onrender.com/tasks/${id}`, {
-    done: !currentDone,
-    userId: user?.uid || user?.displayName
-  })
-  .then(res => {
-    setTasks(tasks.map(t => (t._id === id ? res.data : t)));
-  })
-  .catch(err => console.error("Toggle error:", err));
+const toggleTask = (id, currentDone) => {
+  const userId = user?.uid || user?.displayName;
+
+  axios
+    .put(`https://todotask-im6j.onrender.com/tasks/${id}`, {
+      done: !currentDone,
+      userId,
+    })
+    .then((res) => {
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task._id === id ? res.data : task))
+      );
+    })
+    .catch((err) => {
+      console.error("❌ Failed to toggle task:", err);
+      alert("Toggle failed");
+    });
 };
+
 
 
   const deleteTask = (id) => {

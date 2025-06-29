@@ -85,19 +85,20 @@ app.post('/login', async (req, res) => {
 // ✏️ Update task status
 app.put('/tasks/:id', async (req, res) => {
   const { id } = req.params;
-  const { title, done, userId } = req.body;
+  const { done, userId } = req.body;
 
   try {
     const updated = await Task.findOneAndUpdate(
-      { _id: id, userId }, // ✅ check user ownership
-      { title, done },     // ✅ update title or done
+      { _id: id, userId },
+      { done },
       { new: true }
     );
 
     if (!updated) return res.status(404).json({ error: 'Task not found' });
+
     res.json(updated);
   } catch (err) {
-    console.error("❌ Update failed:", err);
+    console.error("❌ Update error:", err);
     res.status(500).json({ error: 'Update failed' });
   }
 });
