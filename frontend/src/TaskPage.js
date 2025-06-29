@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase';
 
-const API = 'http://192.168.218.68:5050/tasks';
+const API = 'https://todotask-im6j.onrender.com';
 
 function TaskPage({ user }) {
   const [tasks, setTasks] = useState([]);
