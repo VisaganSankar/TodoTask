@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase';
 
-
 function TaskPage({ user }) {
   const [tasks, setTasks] = useState([]);
   const [input, setInput] = useState('');
@@ -17,13 +16,9 @@ function TaskPage({ user }) {
   const userId = user?.uid || user?.displayName;
 
   useEffect(() => {
-    if (!userId) {
-      console.warn("⛔ No userId. Not fetching tasks.");
-      return;
-    }
+    if (!userId) return;
 
-    console.log("📡 Fetching tasks for userId:", userId);
-    axios.get('https://todotask-im6j.onrender.com/tasks?userId=${userId}')
+    axios.get(`https://todotask-im6j.onrender.com/tasks?userId=${userId}`)
       .then(res => setTasks(res.data))
       .catch(err => {
         console.error("❌ Fetch error:", err.message);
@@ -61,7 +56,7 @@ function TaskPage({ user }) {
 
   const saveEdit = (id) => {
     if (!editInput.trim()) return;
-    axios.put('https://todotask-im6j.onrender.com/tasks/${id}', { done: !done,userUd: userId })
+    axios.put(`https://todotask-im6j.onrender.com/tasks/${id}`, { title: editInput, userId })
       .then(res => {
         setTasks(tasks.map(t => (t._id === id ? res.data : t)));
         setEditId(null);
@@ -82,16 +77,12 @@ function TaskPage({ user }) {
   );
 
   return (
-    
     <div className="container">
       <div className="wrapper">
-<div className="account-card">
-  <h2>👤 Welcome, <span>{user.displayName || user.userId}</span></h2>
-  {user.email && (
-    <p className="account-email">📧 {user.email}</p>
-  )}
-</div>
-
+        <div className="account-card">
+          <h2>👤 Welcome, <span>{user.displayName}</span></h2>
+          {user.email && <p className="account-email">📧 {user.email}</p>}
+        </div>
 
         <header><h1>📝 Todo Task Manager</h1></header>
 
@@ -147,9 +138,8 @@ function TaskPage({ user }) {
         </div>
 
         <div className="logout-wrapper">
-  <button onClick={handleLogout} className="logout-btn"> Logout</button>
-</div>
-
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
+        </div>
       </div>
     </div>
   );
