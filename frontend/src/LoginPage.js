@@ -6,13 +6,14 @@ import './App.css';
 import axios from 'axios';
 
 function LoginPage({ setUser }) {
+  const API = "https://todotask-im6j.onrender.com/tasks";
   const navigate = useNavigate();
 const [identifier, setIdentifier] = useState('');
 const [password, setPassword] = useState('');
 
 
 const handleManualLogin = () => {
-  axios.post('http://192.168.218.68:5050/login', { identifier, password })
+  axios.post(API, { identifier, password })
     .then(res => {
       const manualUser = {
         displayName: res.data.userId,

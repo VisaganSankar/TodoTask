@@ -4,6 +4,8 @@ import './App.css';
 import { useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
+  const API = "https://todotask-im6j.onrender.com/tasks";
+
   const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,7 +18,7 @@ if (!emailPattern.test(email)) {
   return;
 }
 
-    axios.post('http://192.168.218.68:5050/register', { userId,email,password })
+    axios.post(API, { userId,email,password })
       .then(() => {
         alert('✅ Registered! You can now login.');
         navigate('/login');
