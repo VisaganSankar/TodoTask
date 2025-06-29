@@ -39,24 +39,26 @@ function LoginPage({ setUser }) {
   };
 
   // Google login handler
-  const handleGoogleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = {
-        uid: result.user.uid,
-        email: result.user.email,
-        displayName: result.user.displayName,
-        type: 'google'
-      };
+ const handleGoogleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
-      localStorage.setItem('taskUser', JSON.stringify(user));
-      setUser(user);
-      navigate('/task');
-    } catch (error) {
-      console.error('Google login failed:', error);
-      alert('❌ Google login failed');
-    }
-  };
+    const userData = {
+      displayName: user.displayName,
+      email: user.email,
+      uid: user.uid,
+      type: "google",
+    };
+
+    setUser(userData);
+    localStorage.setItem("taskUser", JSON.stringify(userData));
+    navigate("/task");
+  } catch (error) {
+    console.error("❌ Google login failed:", error);
+    alert("Google login failed. Check console.");
+  }
+};
 
   return (
     <div className="container" style={{ textAlign: 'center', marginTop: '100px' }}>
