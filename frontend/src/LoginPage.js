@@ -1,9 +1,8 @@
-// src/LoginPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from './firebase';
-import './App.css'; // Optional: for styling
+import './App.css'; 
 import axios from 'axios';
 
 function LoginPage({ setUser }) {
