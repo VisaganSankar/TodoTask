@@ -45,6 +45,7 @@ A full-stack **Task Management Web App** built for the Katomaran Hackathon, with
 ---
 
 ## 📁 Project Structure
+
 project-root/
 ├── backend/ # Express.js + MongoDB backend
 │ ├── models/ # Mongoose models (User, Task)
@@ -56,8 +57,6 @@ project-root/
 │
 ├── README.md # You're reading it!
 └── .gitignore
-
-
 ---
 
 ## 🚀 Getting Started (Local Development)
