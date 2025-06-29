@@ -84,18 +84,24 @@ app.post('/login', async (req, res) => {
 
 // ✏️ Update task status
 app.put('/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, done, userId } = req.body;
+
   try {
-    const { done } = req.body;
-    const task = await Task.findByIdAndUpdate(
-      req.params.id,
-      { done },
+    const updated = await Task.findOneAndUpdate(
+      { _id: id, userId }, // ✅ check user ownership
+      { title, done },     // ✅ update title or done
       { new: true }
     );
-    res.json(task);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update task' });
+
+    if (!updated) return res.status(404).json({ error: 'Task not found' });
+    res.json(updated);
+  } catch (err) {
+    console.error("❌ Update failed:", err);
+    res.status(500).json({ error: 'Update failed' });
   }
 });
+
 
 // ❌ Delete a task
 app.delete('/tasks/:id', async (req, res) => {

@@ -88,7 +88,7 @@ function LoginPage({ setUser }) {
 
       <hr style={{ margin: '30px auto', width: '60%', borderColor: '#444' }} />
 
-      <button className="save-btn" onClick={handleGoogleLogin}> Sign in with google</button>
+      <button className="save-btn" onClick={handleGoogleLogin}> Sign in with Google</button>
 
       <p style={{ marginTop: '20px' }}>
         Don’t have an account? <a href="/register">Register</a>
